@@ -200,17 +200,24 @@ a:hover { color: var(--accent-2); }
   text-align: center;
 }
 
+/* 渐变描边环：渐变放在外层，靠 padding 露出环边。
+   注意别把 mask-composite 那套技巧直接用在 <img> 上——会把图片本体也挖空，只剩一个空环。 */
+.hero-avatar-ring {
+  display: inline-block;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--grad);
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-lg);
+}
+
 .hero-avatar {
-  width: 78px; height: 78px;
+  display: block;
+  width: 78px;
+  height: 78px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 18px;
-  border: 2px solid transparent;
-  background: var(--grad) border-box;
-  -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  box-shadow: var(--shadow-lg);
+  border: 2px solid var(--bg);
 }
 
 .hero-title {

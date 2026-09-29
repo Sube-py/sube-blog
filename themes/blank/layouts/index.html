@@ -4,7 +4,9 @@
 
 <section class="hero">
   {{ with site.Params.avatar }}
-    <img class="hero-avatar" src="{{ . }}" alt="{{ site.Params.author }}">
+    <span class="hero-avatar-ring">
+      <img class="hero-avatar" src="{{ . }}" alt="{{ site.Params.author }}" width="78" height="78">
+    </span>
   {{ end }}
   <h1 class="hero-title">{{ site.Title }}</h1>
 
