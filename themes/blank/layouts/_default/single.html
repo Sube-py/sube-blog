@@ -1,0 +1,30 @@
+{{ define "main" }}
+<article class="post">
+  <header class="post-head">
+    <h1>{{ .Title }}</h1>
+    <div class="post-meta">
+      <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+      <span class="sep">·</span><span class="muted">{{ .WordCount }} 字 · {{ .ReadingTime }} 分钟</span>
+      {{ with .Params.tags }}<span class="sep">·</span>{{ range . }}<a class="tag" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ . }}</a>{{ end }}{{ end }}
+    </div>
+  </header>
+
+  {{ if and .TableOfContents (gt (len .TableOfContents) 100) }}
+  <aside class="toc">
+    <details open>
+      <summary>目录</summary>
+      {{ .TableOfContents }}
+    </details>
+  </aside>
+  {{ end }}
+
+  <div class="post-content">
+    {{ .Content }}
+  </div>
+
+  <footer class="post-foot">
+    {{ with .PrevInSection }}<a href="{{ .RelPermalink }}">← {{ .Title }}</a>{{ end }}
+    {{ with .NextInSection }}<a href="{{ .RelPermalink }}">{{ .Title }} →</a>{{ end }}
+  </footer>
+</article>
+{{ end }}

@@ -1,0 +1,54 @@
+baseURL = 'https://blog.batariya.top/'          # ⚠️ 改成你的域名（末尾要有斜杠）
+languageCode = 'zh-CN'
+title = "Sube's Blog"
+theme = 'blank'
+hasCJKLanguage = true                     # 中日韩字数统计/摘要更准
+enableRobotsTXT = true
+enableEmoji = true
+
+# 生成 RSS / sitemap（只保留 HTML + RSS，避免缺少模板导致构建报错）
+[outputs]
+  home = ['HTML', 'RSS']
+
+[pagination]
+  pagerSize = 10
+
+[params]
+  author = 'Sube'
+  description = '记录踩坑与思考'
+  avatar = ''
+  # 导航
+  menus = ['posts', 'tags', 'about']
+  # 首页是否显示摘要
+  showSummary = true
+  # 是否开启深色模式自动切换（follow / dark / light）
+  colorScheme = 'follow'
+  # 备案号（国内域名必填，放页脚）
+  icp = ''
+  # 建站年份
+  since = 2026
+
+# ========== 代码高亮（Hugo 内置 Chroma） ==========
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true                       # 允许 md 里写原始 HTML
+  [markup.highlight]
+    style = 'github-dark'
+    lineNos = false
+    lineNumbersInTable = false
+    tabWidth = 4
+    noClasses = false                     # 用 CSS class，配合主题样式
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = false
+
+# ========== 文章列表/分类 ==========
+[taxonomies]
+  tag = 'tags'
+  category = 'categories'
+
+# Sveltia CMS 写入的字段都在这里，保持默认即可
+[frontmatter]
+  date = ['date', 'publishDate', 'lastmod']

@@ -1,0 +1,7 @@
+name = "cms-oauth-broker"
+main = "worker.js"
+compatibility_date = "2026-09-29"
+
+# 部署后到 Dashboard → Settings → Domains & Routes 绑定自己的域名
+# workers.dev 域名国内访问不稳定，务必绑自定义域名
+# workers_dev = false

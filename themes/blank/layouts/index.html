@@ -1,0 +1,33 @@
+{{ define "main" }}
+<section class="hero">
+  <h1>{{ .Site.Title }}</h1>
+  <p class="muted">{{ .Site.Params.description }}</p>
+</section>
+
+{{ $pages := where site.RegularPages "Section" "posts" }}
+{{ $paginator := .Paginate ($pages.ByDate.Reverse) }}
+
+<ul class="post-list">
+  {{ range $paginator.Pages }}
+  <li class="post-item">
+    <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
+    <div class="post-meta">
+      <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
+      {{ with .Params.tags }}<span class="sep">·</span>{{ range . }}<a class="tag" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ . }}</a>{{ end }}{{ end }}
+      <span class="sep">·</span><span class="muted">{{ .ReadingTime }} 分钟</span>
+    </div>
+    {{ if site.Params.showSummary }}
+    <p class="post-summary">{{ .Summary | plainify | truncate 140 }}</p>
+    {{ end }}
+  </li>
+  {{ end }}
+</ul>
+
+{{ if gt $paginator.TotalPages 1 }}
+<nav class="pager">
+  {{ if $paginator.HasPrev }}<a href="{{ $paginator.Prev.URL }}">← 上一页</a>{{ end }}
+  <span class="muted">{{ $paginator.PageNumber }} / {{ $paginator.TotalPages }}</span>
+  {{ if $paginator.HasNext }}<a href="{{ $paginator.Next.URL }}">下一页 →</a>{{ end }}
+</nav>
+{{ end }}
+{{ end }}

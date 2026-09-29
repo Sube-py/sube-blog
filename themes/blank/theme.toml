@@ -1,0 +1,10 @@
+name = "blank"
+license = "MIT"
+description = "零依赖极简 Hugo 主题，专为国内托管 + Git CMS 场景设计"
+homepage = ""
+tags = ["blog", "minimal", "dark-mode"]
+features = ["blog", "dark-mode", "responsive", "code-highlight", "toc"]
+min_version = "0.120.0"
+
+[author]
+  name = "generated"

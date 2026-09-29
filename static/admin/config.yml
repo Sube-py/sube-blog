@@ -1,0 +1,57 @@
+backend:
+  name: github
+  repo: your-github-name/your-blog-repo   # ⚠️ 改成 owner/repo
+  branch: main
+  # OAuth broker 地址（方案 B/C 配好后取消下面两行注释）
+  # 只粘贴 PAT（方案 A）时不要写 base_url
+  # base_url: https://cms-auth.yourdomain.com
+  # auth_endpoint: auth
+
+# 本地预览用：hugo server 时打开 http://localhost:1313/admin/
+# site_url 决定后台"查看站点"按钮跳哪
+site_url: https://example.com        # ⚠️ 改成你的域名
+display_url: https://example.com
+
+# 图片上传目录（会直接提交进 git）
+media_folder: static/images/uploads
+public_folder: /images/uploads
+
+# 编辑器默认展开的预览样式
+editor:
+  preview: true
+
+collections:
+  # ============ 博客文章 ============
+  - name: posts
+    label: 文章
+    folder: content/posts
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    extension: md
+    format: yaml-frontmatter
+    summary: "{{title}}"
+    fields:
+      - { label: "标题", name: "title", widget: "string" }
+      - label: "发布日期"
+        name: "date"
+        widget: "datetime"
+        format: "YYYY-MM-DDTHH:mm:ssZ"
+        default: "{{now}}"
+      - { label: "标签", name: "tags", widget: "list", default: [] }
+      - { label: "分类", name: "categories", widget: "list", required: false }
+      - { label: "摘要", name: "description", widget: "text", required: false }
+      - { label: "封面图", name: "image", widget: "image", required: false }
+      - { label: "草稿（勾选则不发布）", name: "draft", widget: "boolean", default: false }
+      - { label: "正文", name: "body", widget: "markdown" }
+
+  # ============ 独立页面（关于页等） ============
+  - name: pages
+    label: 页面
+    files:
+      - label: "关于我"
+        name: "about"
+        file: "content/about.md"
+        fields:
+          - { label: "标题", name: "title", widget: "string" }
+          - { label: "正文", name: "body", widget: "markdown" }

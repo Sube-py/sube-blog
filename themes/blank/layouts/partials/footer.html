@@ -1,0 +1,43 @@
+<footer class="site-footer">
+  <div class="container">
+    <p class="muted">
+      © {{ now.Year }} {{ .Site.Params.author | default .Site.Title }}
+      {{ with .Site.Params.since }}· since {{ . }}{{ end }}
+    </p>
+    <p class="muted small">
+      Powered by Hugo · Hosted on EdgeOne Pages
+      {{ with .Site.Params.icp }} · <a href="https://beian.miit.gov.cn/" rel="nofollow" target="_blank">{{ . }}</a>{{ end }}
+    </p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  var btn = document.getElementById('theme-toggle');
+  var KEY = 'blog-scheme';
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+
+  function apply(mode) {
+    root.setAttribute('data-scheme', mode);
+    try { localStorage.setItem(KEY, mode); } catch (e) {}
+  }
+
+  var follow = root.getAttribute('data-scheme') === 'follow';
+  if (saved && (saved === 'dark' || saved === 'light')) {
+    root.setAttribute('data-scheme', saved);
+  } else if (follow) {
+    var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+    if (mq && mq.matches) root.setAttribute('data-scheme', 'dark');
+  }
+
+  if (btn) {
+    btn.addEventListener('click', function () {
+      var cur = root.getAttribute('data-scheme');
+      var isDark = cur === 'dark';
+      apply(isDark ? 'light' : 'dark');
+    });
+  }
+})();
+</script>

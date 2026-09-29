@@ -1,0 +1,12 @@
+<header class="site-header">
+  <div class="container header-inner">
+    <a class="brand" href="{{ "/" | relURL }}">{{ .Site.Title }}</a>
+    <nav class="nav">
+      <a href="{{ "/" | relURL }}">首页</a>
+      <a href="{{ "/posts/" | relURL }}">归档</a>
+      <a href="{{ "/tags/" | relURL }}">标签</a>
+      <a href="{{ "/about/" | relURL }}">关于</a>
+      <button id="theme-toggle" type="button" title="切换深色/浅色">🌓</button>
+    </nav>
+  </div>
+</header>

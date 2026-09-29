@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>内容管理后台</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✍️</text></svg>">
+  <style>
+    html, body { margin: 0; height: 100%; background: #0d1117; }
+    #loading {
+      display: flex; align-items: center; justify-content: center;
+      height: 100%; color: #8b949e; font-family: sans-serif; font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div id="loading">正在加载内容管理后台…（如长时间卡住，请检查网络或刷新）</div>
+
+  <!-- Sveltia CMS：Decap/Netlify CMS 的现代替代品，config.yml 完全兼容 -->
+  <script src="https://unpkg.com/@sveltia/cms@^0.211.0/dist/sveltia-cms.js" type="module"></script>
+  <!-- 加载完成后移除 loading 提示 -->
+  <script type="module">
+    const t = setTimeout(() => {
+      const el = document.getElementById('loading');
+      if (el) el.textContent = '加载较慢，可能是 unpkg CDN 被拦截。可改用字节/腾讯镜像，见 README。';
+    }, 6000);
+    window.addEventListener('load', () => {
+      clearTimeout(t);
+      const el = document.getElementById('loading');
+      if (el) el.remove();
+    });
+  </script>
+</body>
+</html>
