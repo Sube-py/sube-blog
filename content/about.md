@@ -1,10 +1,11 @@
 ---
-title: "关于我"
+title: 关于我
 date: 2026-09-29T10:00:00+08:00
 draft: false
 ---
 
-这里是关于页面。可以在后台 **页面 → 关于我** 里直接编辑。
+Sube · 后端 & LLM 应用
 
-- 后端 / 基础设施方向
-- 喜欢记录踩坑过程
+Python / Rust / Agent / Codex
+
+[GitHub](https://github.com/Sube-py) · z397503810@gmail.com
