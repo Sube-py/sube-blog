@@ -24,7 +24,7 @@ enableEmoji = true
   # 是否开启深色模式自动切换（follow / dark / light）
   colorScheme = 'follow'
   # 备案号（国内域名必填，放页脚）
-  icp = ''
+  icp = '豫ICP备19041866号'
   # 建站年份
   since = 2026
 
