@@ -7,7 +7,13 @@
   <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} · {{ .Site.Title }}{{ end }}</title>
   <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
   <link rel="alternate" type="application/rss+xml" href="{{ "index.xml" | relURL }}" title="{{ .Site.Title }}">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📝</text></svg>">
+
+  {{/* Favicon：SVG 优先，ICO/PNG 兜底，覆盖各种浏览器和 iOS 主屏幕 */}}
+  <link rel="icon" type="image/svg+xml" href="{{ "favicon.svg" | relURL }}">
+  <link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32.png" | relURL }}">
+  <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+  <meta name="theme-color" content="#7c7cff">
   {{ template "_internal/opengraph.html" . }}
 </head>
 <body>
