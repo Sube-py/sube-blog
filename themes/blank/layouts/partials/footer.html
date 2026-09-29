@@ -1,13 +1,27 @@
 <footer class="site-footer">
-  <div class="container">
-    <p class="muted">
-      © {{ now.Year }} {{ .Site.Params.author | default .Site.Title }}
-      {{ with .Site.Params.since }}· since {{ . }}{{ end }}
+  <div class="container footer-inner">
+    <div class="footer-brand">
+      {{ with site.Params.avatar }}
+        <img class="brand-avatar" src="{{ . }}" alt="{{ site.Params.author }}">
+      {{ end }}
+      <div>
+        <p class="footer-author">{{ site.Params.author | default site.Title }}</p>
+        <p class="muted small">{{ site.Params.description }}</p>
+      </div>
+    </div>
+
+    {{ partial "social.html" (dict "size" 20) }}
+
+    <p class="muted small footer-meta">
+      © {{ now.Year }}
+      {{ with site.Params.since }}· since {{ . }}{{ end }}
+      · Powered by Hugo on EdgeOne Pages
     </p>
+    {{ with site.Params.icp }}
     <p class="muted small">
-      Powered by Hugo · Hosted on EdgeOne Pages
-      {{ with .Site.Params.icp }} · <a href="https://beian.miit.gov.cn/" rel="nofollow" target="_blank">{{ . }}</a>{{ end }}
+      <a href="https://beian.miit.gov.cn/" rel="nofollow noopener" target="_blank">{{ . }}</a>
     </p>
+    {{ end }}
   </div>
 </footer>
 
@@ -16,28 +30,126 @@
   var root = document.documentElement;
   var btn = document.getElementById('theme-toggle');
   var KEY = 'blog-scheme';
-  var saved = null;
-  try { saved = localStorage.getItem(KEY); } catch (e) {}
 
   function apply(mode) {
     root.setAttribute('data-scheme', mode);
     try { localStorage.setItem(KEY, mode); } catch (e) {}
   }
 
-  var follow = root.getAttribute('data-scheme') === 'follow';
-  if (saved && (saved === 'dark' || saved === 'light')) {
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+
+  if (saved === 'dark' || saved === 'light') {
     root.setAttribute('data-scheme', saved);
-  } else if (follow) {
+  } else if (root.getAttribute('data-scheme') === 'follow') {
     var mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
     if (mq && mq.matches) root.setAttribute('data-scheme', 'dark');
   }
 
   if (btn) {
     btn.addEventListener('click', function () {
-      var cur = root.getAttribute('data-scheme');
-      var isDark = cur === 'dark';
-      apply(isDark ? 'light' : 'dark');
+      apply(root.getAttribute('data-scheme') === 'dark' ? 'light' : 'dark');
     });
+  }
+
+  /* ---- 顶部阅读进度条 ---- */
+  var bar = document.getElementById('scrollProgress');
+  if (bar) {
+    var ticking = false;
+    function update() {
+      var h = document.documentElement;
+      var max = h.scrollHeight - h.clientHeight;
+      var pct = max > 0 ? (h.scrollTop / max) * 100 : 0;
+      bar.style.width = pct + '%';
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+
+  /* ---- 代码块复制按钮 ---- */
+  if ({{ site.Params.effects.codeCopy | default true }}) {
+    document.querySelectorAll('.post-content pre').forEach(function (pre) {
+      if (pre.querySelector('.code-copy')) return;
+
+      var wrap = document.createElement('div');
+      wrap.className = 'code-block';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      var btn = document.createElement('button');
+      btn.className = 'code-copy';
+      btn.type = 'button';
+      btn.setAttribute('aria-label', '复制代码');
+      btn.innerHTML =
+        '<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+        '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+        '<span class="code-copy-text">复制</span>';
+
+      btn.addEventListener('click', function () {
+        var code = pre.querySelector('code');
+        var text = code ? code.innerText : pre.innerText;
+        var done = function () {
+          btn.classList.add('copied');
+          btn.querySelector('.code-copy-text').textContent = '已复制';
+          setTimeout(function () {
+            btn.classList.remove('copied');
+            btn.querySelector('.code-copy-text').textContent = '复制';
+          }, 1600);
+        };
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(text).then(done);
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = text;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); done(); } catch (e) {}
+          document.body.removeChild(ta);
+        }
+      });
+
+      wrap.appendChild(btn);
+    });
+  }
+
+  /* ---- Hero 打字机 ---- */
+  var typingEl = document.querySelector('[data-typing]');
+  if (typingEl) {
+    var words = JSON.parse(typingEl.getAttribute('data-typing') || '[]');
+    if (words.length) {
+      var i = 0, j = 0, deleting = false;
+      (function loop() {
+        var word = words[i];
+        typingEl.textContent = deleting ? word.slice(0, j--) : word.slice(0, j++);
+        var delay = deleting ? 60 : 130;
+        if (!deleting && j > word.length) { deleting = true; delay = 1400; }
+        else if (deleting && j < 0) { deleting = false; i = (i + 1) % words.length; j = 0; delay = 320; }
+        setTimeout(loop, delay);
+      })();
+    }
+  }
+
+  /* ---- 卡片入场动画 ---- */
+  var items = document.querySelectorAll('.post-item');
+  if (items.length && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+        });
+      }, { threshold: 0.08 });
+      items.forEach(function (el, idx) {
+        el.style.transitionDelay = Math.min(idx * 45, 400) + 'ms';
+        io.observe(el);
+      });
+    } else {
+      items.forEach(function (el) { el.classList.add('in'); });
+    }
   }
 })();
 </script>

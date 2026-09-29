@@ -1,4 +1,4 @@
-baseURL = 'https://blog.batariya.top/'          # ⚠️ 改成你的域名（末尾要有斜杠）
+baseURL = 'https://blog.batariya.top/'    # ⚠️ 改成你的域名（末尾要有斜杠）
 languageCode = 'zh-CN'
 title = "Sube's Blog"
 theme = 'blank'
@@ -15,10 +15,8 @@ enableEmoji = true
 
 [params]
   author = 'Sube'
-  description = '记录踩坑与思考'
-  avatar = ''
-  # 导航
-  menus = ['posts', 'tags', 'about']
+  description = '后端 · 大模型应用 · Agent 工程'
+  avatar = 'https://github.com/Sube-py.png'   # GitHub 头像，换图改这行
   # 首页是否显示摘要
   showSummary = true
   # 是否开启深色模式自动切换（follow / dark / light）
@@ -27,6 +25,32 @@ enableEmoji = true
   icp = '豫ICP备19041866号'
   # 建站年份
   since = 2026
+
+  # ========== 首页 Hero ==========
+  heroTagline = 'Python 后端 · 大模型应用 · Agent 工程'
+  # 打字机轮播：建议 3-6 个，每个 4-14 字符（太长打字会慢）
+  typingWords = ['LLM 应用开发', 'Agent & Harness', 'Python / Rust', '分布式与性能', '踩坑与复盘']
+
+  # ========== 社交链接 ==========
+  # 支持的 type：github / x / telegram / email / rss / zhihu / juejin / bilibili / wechat
+  # 不需要的直接删掉对应行即可
+  [[params.social]]
+    type = 'github'
+    url = 'https://github.com/Sube-py'
+  [[params.social]]
+    type = 'email'
+    url = 'mailto:z397503810@gmail.com'
+  [[params.social]]
+    type = 'rss'
+    url = '/index.xml'
+
+  # ========== 视觉开关 ==========
+  [params.effects]
+    glow = true              # 背景光晕
+    typing = true            # Hero 打字机
+    cardHover = true         # 卡片悬浮上浮 + 发光
+    scrollProgress = true    # 顶部阅读进度条
+    codeCopy = true          # 代码块复制按钮
 
 # ========== 代码高亮（Hugo 内置 Chroma） ==========
 [markup]

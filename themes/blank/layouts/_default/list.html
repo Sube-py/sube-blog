@@ -1,21 +1,31 @@
 {{ define "main" }}
+{{ if site.Params.effects.glow }}<div class="bg-glow" aria-hidden="true"></div>{{ end }}
+
 <h1 class="page-title">{{ .Title }}</h1>
 
 {{ if eq .Section "tags" }}
 <ul class="tag-cloud">
   {{ range .Data.Terms.ByCount }}
-  <li><a href="{{ .Page.RelPermalink }}">#{{ .Page.Title }} <span class="muted">({{ .Count }})</span></a></li>
+  <li><a href="{{ .Page.RelPermalink }}">#{{ .Page.Title }} <span class="muted small">({{ .Count }})</span></a></li>
   {{ end }}
 </ul>
 {{ else }}
 <ul class="post-list">
   {{ range .Pages.ByDate.Reverse }}
   <li class="post-item">
-    <a class="post-title" href="{{ .RelPermalink }}">{{ .Title }}</a>
-    <div class="post-meta">
-      <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date.Format "2006-01-02" }}</time>
-      {{ with .Params.tags }}<span class="sep">·</span>{{ range . }}<a class="tag" href="{{ "/tags/" | relURL }}{{ . | urlize }}/">#{{ . }}</a>{{ end }}{{ end }}
-    </div>
+    <a class="post-link" href="{{ .RelPermalink }}">
+      <time class="post-date" datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">
+        {{ .Date.Format "01/02" }}
+      </time>
+      <div class="post-body">
+        <h3 class="post-title">{{ .Title }}</h3>
+        <div class="post-meta">
+          <span>{{ .ReadingTime }} 分钟</span>
+          {{ with .Params.tags }}<span class="sep">·</span>{{ range . }}<span class="tag">#{{ . }}</span>{{ end }}{{ end }}
+        </div>
+      </div>
+      <span class="post-arrow" aria-hidden="true">→</span>
+    </a>
   </li>
   {{ end }}
 </ul>

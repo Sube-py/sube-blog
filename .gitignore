@@ -1,0 +1,179 @@
+# ============================================================
+#  macOS
+# ============================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# macOS 缩略图 / 索引
+.Spotlight-V100
+.Trashes
+.DocumentRevisions-V100
+.fseventsd
+.TemporaryItems
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# 外接盘 / 网络盘残留
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+
+# Windows（偶尔跨平台时有用）
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ============================================================
+#  Hugo
+# ============================================================
+public/                 # 构建产物，由 CI 生成，不要提交
+resources/              # Hugo 缓存（图片处理、资源管道）
+.hugo_build.lock
+hugo_stats.json         # 构建统计，每次都变
+.hugo_build/
+
+# ============================================================
+#  Python（后端 / LLM 应用 / Agent）
+# ============================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+develop-eggs/
+downloads/
+eggs/
+.eggs/
+sdist/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+.venv/
+venv/
+ENV/
+env/
+.env
+.env.*
+!.env.example
+
+# 测试 / 类型检查 / lint 缓存
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.dmypy.json
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# Jupyter（调模型时常用）
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ML / 大模型相关（避免误提交大文件）
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+*.onnx
+*.model
+models/
+checkpoints/
+runs/
+wandb/
+mlruns/
+*.arrow
+*.parquet
+dataset/
+datasets/
+
+# uv / poetry / pdm
+.venv
+uv.lock.bak
+.pdm-python
+.pdm-build/
+
+# ============================================================
+#  Node（构建工具 / CMS 依赖）
+# ============================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.npm/
+.pnpm-store/
+.yarn/
+.cache/
+.parcel-cache/
+.turbo/
+.next/
+.out/
+.nuxt/
+.svelte-kit/
+dist/
+.vite/
+
+# ============================================================
+#  Rust（你有 Rust 项目）
+# ============================================================
+/target/
+**/*.rs.bk
+*.pdb
+# 注意：可执行项目建议提交 Cargo.lock，仓库根目录可按需取消下面一行注释
+# Cargo.lock
+
+# ============================================================
+#  编辑器 / IDE
+# ============================================================
+.idea/
+*.swp
+*.swo
+*~
+*.iml
+.project
+.classpath
+.settings/
+
+# VS Code：忽略个人配置，保留可共享的推荐配置
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
+
+# ============================================================
+#  密钥 / 本地凭证（重要）
+# ============================================================
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+*.token
+credentials.json
+service-account*.json
+.secrets/
+.netrc
+
+# ============================================================
+#  杂项
+# ============================================================
+*.log
+*.tmp
+*.bak
+*.orig
+*.stackdump

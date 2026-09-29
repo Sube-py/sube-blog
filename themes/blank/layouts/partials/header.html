@@ -1,12 +1,33 @@
+{{ $effects := site.Params.effects }}
 <header class="site-header">
+  {{ if $effects.scrollProgress }}
+  <div class="scroll-progress" id="scrollProgress"></div>
+  {{ end }}
+
   <div class="container header-inner">
-    <a class="brand" href="{{ "/" | relURL }}">{{ .Site.Title }}</a>
+    <a class="brand" href="{{ "/" | relURL }}">
+      {{ with site.Params.avatar }}
+        <img class="brand-avatar" src="{{ . }}" alt="{{ site.Title }}">
+      {{ end }}
+      <span class="brand-text">{{ site.Title }}</span>
+    </a>
+
     <nav class="nav">
       <a href="{{ "/" | relURL }}">首页</a>
       <a href="{{ "/posts/" | relURL }}">归档</a>
       <a href="{{ "/tags/" | relURL }}">标签</a>
       <a href="{{ "/about/" | relURL }}">关于</a>
-      <button id="theme-toggle" type="button" title="切换深色/浅色">🌓</button>
+
+      {{ partial "social.html" (dict "size" 17) }}
+
+      <button id="theme-toggle" type="button" aria-label="切换深色/浅色" title="切换深色/浅色">
+        <svg class="icon-sun" viewBox="0 0 24 24" width="17" height="17" fill="currentColor">
+          <path d="M12 4V2m0 20v-2m8-8h2M2 12h2m13.657-5.657L19.07 4.93M4.93 19.07l1.414-1.414m0-11.314L4.93 4.93m14.14 14.14-1.414-1.414M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8Z"/>
+        </svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" width="17" height="17" fill="currentColor">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/>
+        </svg>
+      </button>
     </nav>
   </div>
 </header>
