@@ -108,8 +108,11 @@ body {
   min-height: 100dvh;   /* 移动端地址栏收起时也用满屏，后者不支持时回退到 vh */
 }
 
-/* main 撑开吃掉剩余空间，页脚自然被推到底部 */
-body > main { flex: 1 0 auto; }
+/* main 撑开吃掉剩余空间，页脚自然被推到底部。
+   width:100% 不能省：flex 容器里子项的交叉轴尺寸默认是 fit-content
+   （.container 的 margin:0 auto 是 auto 外边距，会抵消 stretch），
+   那样 max-width 就失效了，窄屏下正文的 min-content 宽度会撑破页面。 */
+body > main { flex: 1 0 auto; width: 100%; }
 
 a { color: var(--accent); text-decoration: none; transition: color .18s ease; }
 a:hover { color: var(--accent-2); }
@@ -447,7 +450,9 @@ a:hover { color: var(--accent-2); }
   font-weight: 700;
   letter-spacing: -.015em;
   color: var(--fg-strong);
-  scroll-margin-top: 80px;
+  /* 不要再写 scroll-margin-top：html 上已经有 scroll-padding-top 78px 避开
+     吸顶头部了，两个会叠加成 158px，点目录跳转后标题停得太低，
+     目录高亮也会因此慢一节。 */
 }
 .post-content h2::before {
   content: "";
@@ -499,6 +504,11 @@ a:hover { color: var(--accent-2); }
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   overflow: hidden;
+  /* 表格压不到比 min-content 更窄，窄屏下会把整个页面撑出横向滚动条。
+     改成 block + overflow-x:auto，让表格自己内部横滚，页面不动。
+     行、单元格照常按 table 布局渲染，圆角和边框都还在。 */
+  display: block;
+  overflow-x: auto;
 }
 .post-content th {
   background: var(--bg-soft);
@@ -601,6 +611,8 @@ a:hover { color: var(--accent-2); }
 .toc ul ul { margin: 0; }
 .toc a { color: var(--fg-muted); overflow-wrap: anywhere; }
 .toc a:hover { color: var(--accent); }
+/* 当前在读的章节，class 由页脚 JS 加 */
+.toc a.is-active { color: var(--accent); font-weight: 600; }
 
 /* ============ 标签云 ============ */
 .tag-cloud { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 10px; }

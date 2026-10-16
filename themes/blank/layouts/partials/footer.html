@@ -69,6 +69,73 @@
     update();
   }
 
+  /* ---- 目录当前章节高亮 ---- */
+  var tocNav = document.getElementById('TableOfContents');
+  if (tocNav) {
+    var headerH = parseInt(getComputedStyle(document.documentElement)
+      .getPropertyValue('--header-h'), 10) || 62;
+
+    /* 收集 目录链接 -> 对应标题，链接和标题对不上就跳过这一项 */
+    var entries = [];
+    tocNav.querySelectorAll('a').forEach(function (a) {
+      var href = a.getAttribute('href') || '';
+      var id = href.charAt(0) === '#' ? href.slice(1) : href;
+      try { id = decodeURIComponent(id); } catch (e) {}
+      var heading = id && document.getElementById(id);
+      if (heading) entries.push({ link: a, heading: heading });
+    });
+
+    var active = null;
+    function highlight(entry) {
+      if (active === entry) return;
+      if (active) active.link.classList.remove('is-active');
+      active = entry;
+      if (!active) return;
+      active.link.classList.add('is-active');
+
+      /* 目录比视口高、内部出现滚动时，把当前项带进可见区域。
+         这里直接改 scrollTop，不用 scrollIntoView，避免连带滚动整个页面 */
+      var navBox = tocNav.getBoundingClientRect();
+      var linkBox = active.link.getBoundingClientRect();
+      if (linkBox.top < navBox.top) {
+        tocNav.scrollTop -= navBox.top - linkBox.top + 8;
+      } else if (linkBox.bottom > navBox.bottom) {
+        tocNav.scrollTop += linkBox.bottom - navBox.bottom + 8;
+      }
+    }
+
+    /* 注意别叫 ticking：上面进度条里已经有一个同名 var，共用会互相饿死 */
+    var spyTicking = false;
+    function sync() {
+      spyTicking = false;
+
+      /* 视口顶部这条线以下、离它最近的那个标题，就是当前在读的章节 */
+      var line = headerH + 24;
+      var found = null;
+      for (var i = 0; i < entries.length; i++) {
+        if (entries[i].heading.getBoundingClientRect().top <= line) found = entries[i];
+      }
+
+      /* 还没滚到第一个标题时（刚点目录跳转过来、或停在开头导语），高亮第一项，
+         不然整个目录一条都不亮，像是没生效。
+         注意锚点跳转会把标题停在 scroll-padding-top + scroll-margin-top 的位置，
+         比这条线低不少，所以这个兜底是必需的 */
+      if (!found) found = entries[0];
+
+      /* 滚到最底部时高亮最后一节，否则末尾章节太短就永远选不中 */
+      var root = document.documentElement;
+      if (window.scrollY + window.innerHeight >= root.scrollHeight - 4) {
+        found = entries[entries.length - 1];
+      }
+
+      highlight(found);
+    }
+    window.addEventListener('scroll', function () {
+      if (!spyTicking) { spyTicking = true; requestAnimationFrame(sync); }
+    }, { passive: true });
+    sync();
+  }
+
   /* ---- 代码块复制按钮 ---- */
   if ({{ site.Params.effects.codeCopy | default true }}) {
     document.querySelectorAll('.post-content pre').forEach(function (pre) {
