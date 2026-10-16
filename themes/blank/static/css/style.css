@@ -79,6 +79,8 @@ a { color: var(--accent); text-decoration: none; transition: color .18s ease; }
 a:hover { color: var(--accent-2); }
 
 .container { max-width: 780px; margin: 0 auto; padding: 0 22px; }
+/* 文章页有右侧目录时加宽容器，正文列仍是 ~708px，不会因为分栏变窄 */
+.container--wide { max-width: 1000px; }
 .muted { color: var(--fg-muted); }
 .small { font-size: 13px; }
 .sep { margin: 0 7px; color: var(--fg-muted); }
@@ -526,12 +528,32 @@ a:hover { color: var(--accent-2); }
 .code-copy.copied { color: #56d364; border-color: rgba(86, 211, 100, .4); }
 
 /* ============ 目录 ============ */
-.toc {
+/* 正文与右侧常驻目录的两栏布局。
+   这里原来写的是 float:right + position:sticky，那是错的：浮动只会缩短后续
+   行内文本的行盒，h2 / pre / table 这些块级框仍按全宽排布，直接滑到目录底下；
+   而 sticky 又让目录成为定位元素，绘制顺序压在后到的正文之上 —— 于是目录
+   就把正文盖住了。改成 grid 显式分栏，两列各占其位，物理上不可能重叠。 */
+.post--with-toc .post-main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 220px;
+  column-gap: 28px;
+  align-items: start;
+}
+/* 行和列都必须显式指定。只给目录定列的话，正文会按自动布局算法被挤到第二行 */
+.post--with-toc .post-main > .toc,
+.post--with-toc .post-main > .post-content { grid-row: 1; }
+.post--with-toc .post-main > .toc { grid-column: 2; }
+.post--with-toc .post-main > .post-content { grid-column: 1; }
+
+.post-main > .toc {
   position: sticky;
-  top: calc(var(--header-h) + 12px);
-  float: right;
-  max-width: 220px;
-  margin: 0 0 16px 20px;
+  top: calc(var(--header-h) + 16px);
+  /* 目录比视口高时在内部滚动，别把页面一起带着走 */
+  max-height: calc(100vh - var(--header-h) - 32px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
   padding: 12px 15px;
   background: var(--bg-soft);
   border: 1px solid var(--border);
@@ -541,7 +563,7 @@ a:hover { color: var(--accent-2); }
 .toc summary { cursor: pointer; font-weight: 600; color: var(--fg-strong); }
 .toc nav ul { margin: 8px 0 0; padding-left: 16px; }
 .toc ul ul { margin: 0; }
-.toc a { color: var(--fg-muted); }
+.toc a { color: var(--fg-muted); overflow-wrap: anywhere; }
 .toc a:hover { color: var(--accent); }
 
 /* ============ 标签云 ============ */
@@ -611,6 +633,20 @@ a:hover { color: var(--accent-2); }
 .footer-meta { margin: 0 0 4px; }
 
 /* ============ 响应式 ============ */
+/* 两栏放不下就堆叠：目录退回正文上方的整行盒子（900px 时正文列只剩 ~380px） */
+@media (max-width: 900px) {
+  .post--with-toc .post-main { display: block; }
+  .post--with-toc .post-main > .toc,
+  .post--with-toc .post-main > .post-content { grid-row: auto; grid-column: auto; }
+  .post-main > .toc {
+    position: static;
+    max-width: none;
+    max-height: none;
+    overflow: visible;
+    margin: 0 0 20px;
+  }
+}
+
 @media (max-width: 640px) {
   .container { padding: 0 16px; }
   .hero { padding: 40px 0 32px; }
@@ -619,7 +655,6 @@ a:hover { color: var(--accent-2); }
   .post-link { grid-template-columns: 1fr; gap: 6px; padding: 15px; }
   .post-date { padding-top: 0; font-size: 12px; }
   .post-arrow { display: none; }
-  .toc { float: none; max-width: none; margin: 0 0 20px; position: static; }
   .code-copy { opacity: 1; }
 }
 

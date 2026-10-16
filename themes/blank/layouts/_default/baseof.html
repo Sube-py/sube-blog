@@ -18,7 +18,9 @@
 </head>
 <body>
   {{ partial "header.html" . }}
-  <main class="container">
+  {{/* 文章页有目录时容器加宽，把右侧常驻目录的空间补回来，正文列宽度基本不变 */}}
+  {{ $wide := false }}{{ if .IsPage }}{{ $wide = gt (len .TableOfContents) 150 }}{{ end }}
+  <main class="container{{ if $wide }} container--wide{{ end }}">
     {{ block "main" . }}{{ end }}
   </main>
   {{ partial "footer.html" . }}
