@@ -24,8 +24,12 @@
   --header-h: 62px;
 }
 
-:root[data-scheme="dark"],
-:root[data-scheme="follow"]:not([data-scheme="light"]) {
+/* 只有显式选了 dark 才无条件用深色。
+   原来这里还挂着一条 :root[data-scheme="follow"]:not([data-scheme="light"])，
+   两个条件都作用在同一个元素上，等价于 :root[data-scheme="follow"]，
+   结果 follow 模式永远是深色 —— 系统是浅色时页面深、滚动条白，对不上。
+   follow 的判定交给下面的 media query 和页脚那段 JS。 */
+:root[data-scheme="dark"] {
   --bg: #0a0b10;
   --bg-soft: #12141c;
   --fg: #e4e7ec;
@@ -55,6 +59,29 @@
   }
 }
 
+/* 告诉浏览器页面是深色还是浅色，原生滚动条和表单控件才会跟着变。
+   不写这条的话，深色模式下滚动条仍是系统默认那条白的 */
+:root { color-scheme: light; }
+:root[data-scheme="dark"] { color-scheme: dark; }
+:root[data-scheme="light"] { color-scheme: light; }
+/* follow：交给浏览器按系统偏好二选一 */
+:root[data-scheme="follow"] { color-scheme: light dark; }
+
+/* ============ 滚动条 ============ */
+/* 自定义滚动条，配色跟着主题走 */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--fg-muted) 38%, transparent) transparent;
+}
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--fg-muted) 38%, transparent);
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover { background: color-mix(in srgb, var(--fg-muted) 62%, transparent); }
+::-webkit-scrollbar-corner { background: transparent; }
+
 /* ============ 基础 ============ */
 * { box-sizing: border-box; }
 
@@ -73,7 +100,16 @@ body {
   line-height: 1.78;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 页脚贴底：body 变成纵向 flex 且至少占满一屏，main 负责吸收剩余高度。
+     不这么做的话，内容不足一屏时页脚会浮在屏幕中间，下面空一大块 */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;   /* 移动端地址栏收起时也用满屏，后者不支持时回退到 vh */
 }
+
+/* main 撑开吃掉剩余空间，页脚自然被推到底部 */
+body > main { flex: 1 0 auto; }
 
 a { color: var(--accent); text-decoration: none; transition: color .18s ease; }
 a:hover { color: var(--accent-2); }
